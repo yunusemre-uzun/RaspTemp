@@ -33,7 +33,7 @@ def readSensors(sensorIDs):
     for id in sensorIDs:
         try:
             sensor_temperature = Sensors.readSensorWithID(id)
-            sensor_readings.append(sensor_temperature)
+            sensor_readings.append(sensor_temperature/100)
         except Exception as e:
             sensor_readings.append(10)
             print (e)
