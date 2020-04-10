@@ -11,7 +11,7 @@ def initialize_firebase(path_to_key):
         'databaseURL': "https://rasptemp-c417a.firebaseio.com"
     })
 
-def writeSensorReadingsToCloudDatabase(sensor_readings):
+def writeSensorReadingsToCloudDatabase(sensor_readings, sensor_names):
     ref = db.reference('server')
     users_ref = ref.child('temperatures')
     current_time = time.localtime()
@@ -20,8 +20,8 @@ def writeSensorReadingsToCloudDatabase(sensor_readings):
     try:
         users_ref.set({
             current_time: {
-                'sensor1': sensor_readings[0],
-                'sensor2': sensor_readings[1]
+                sensor_names[0]: sensor_readings[0],
+                sensor_names[1]: sensor_readings[1]
             },
         })
     except Exception as e:
@@ -52,13 +52,14 @@ def initialize():
         raise DatabaseException(1,e)
     sensor = Sensors()
     sensorIDs = sensor.getSensorIDs()
-    return sensorIDs
+    sensorNames = sensor.getSensorNames()
+    return sensorIDs, sensorNames
 
-def main(sensorIDs):
+def main(sensorIDs, sensorNames):
     while True:
         sensor_readings = readSensors(sensorIDs)
         try:
-            writeSensorReadingsToCloudDatabase(sensor_readings)
+            writeSensorReadingsToCloudDatabase(sensor_readings, sensorNames)
         except DatabaseException as e:
             print(e)
         except Exception as e:
@@ -67,9 +68,9 @@ def main(sensorIDs):
 
 if __name__ == '__main__':
     try:
-        sensorIDs = initialize()
+        sensorIDs, sensorNames = initialize()
     except Exception as e:
         print(e)
-    main(sensorIDs)
+    main(sensorIDs, sensorNames)
 
     

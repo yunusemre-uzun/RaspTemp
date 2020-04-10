@@ -4,9 +4,16 @@ class Sensors(object):
             "28-030297790ba5",
             "28-030297791fbc",
         ]
+        self.sensorNames = [
+            "Ranza-1",
+            "Ranza-2",
+        ]
     
     def getSensorIDs(self):
         return self.sensorIDs
+    
+    def getSensorNames(self):
+        return self.sensorNames
     
     @staticmethod
     def readSensorWithID(id):
