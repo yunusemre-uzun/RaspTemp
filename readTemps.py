@@ -3,6 +3,7 @@ from errors import DatabaseException
 import threading
 import time
 import firebase_admin
+import sys
 from firebase_admin import credentials, db
 
 def initialize_firebase(path_to_key):
@@ -46,8 +47,9 @@ def printSensorReadings(sensor_readings):
     return None
 
 def initialize():
+    print(sys.path)
     try:
-        initialize_firebase("rasptemp-c417a-firebase-adminsdk-ydsnp-07e62a0cc3.json")
+        initialize_firebase(sys.path[0] + "/rasptemp-c417a-firebase-adminsdk-ydsnp-07e62a0cc3.json")
     except Exception as e:
         raise DatabaseException(1,e)
     sensor = Sensors()
