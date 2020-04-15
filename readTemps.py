@@ -4,7 +4,10 @@ import threading
 import time
 import firebase_admin
 import sys
+from datetime import datetime
 from firebase_admin import credentials, db
+
+file = 'logs.txt'
 
 def initialize_firebase(path_to_key):
     cred = credentials.Certificate(path_to_key)
@@ -15,8 +18,8 @@ def initialize_firebase(path_to_key):
 def writeSensorReadingsToCloudDatabase(sensor_readings, sensor_names):
     ref = db.reference('server')
     users_ref = ref.child('temperatures')
-    current_time = time.localtime()
-    current_time = '{}-{}-{}-{}:{}'.format(current_time.tm_mday,current_time.tm_mon,current_time.tm_year,current_time.tm_hour,current_time.tm_min)
+    current_time = datetime.now()
+    current_time = current_time.strftime("%m-%d-%Y, %H:%M:%S")
     print(current_time)
     try:
         users_ref.set({
@@ -42,8 +45,15 @@ def readSensors(sensorIDs):
     return sensor_readings
 
 def printSensorReadings(sensor_readings):
+    global file
+    current_time = datetime.now()
+    current_time = current_time.strftime("%m/%d/%Y, %H:%M:%S \n")
+    with open(file, 'a') as f:
+        f.write(current_time)
     for i,reading in enumerate(sensor_readings):
         print("{}. sensor read {}".format(i,reading))
+        with open(file, 'a') as f:
+            f.write("{}. sensor read {} \n".format(i,reading))
     return None
 
 def initialize():
@@ -58,21 +68,27 @@ def initialize():
     return sensorIDs, sensorNames
 
 def main(sensorIDs, sensorNames):
-    while True:
-        sensor_readings = readSensors(sensorIDs)
-        try:
-            writeSensorReadingsToCloudDatabase(sensor_readings, sensorNames)
-        except DatabaseException as e:
-            print(e)
-        except Exception as e:
-            print(e)
-        time.sleep(60.0)
+    sensor_readings = readSensors(sensorIDs)
+    try:
+        writeSensorReadingsToCloudDatabase(sensor_readings, sensorNames)
+    except DatabaseException as e:
+        print(e)
+    except Exception as e:
+        print(e)
+    #time.sleep(60.0)
+
+def regular(interval, worker_function, sensorIDs, sensorNames):
+    threading.Timer(interval, regular, args=[ interval,worker_function, sensorIDs, sensorNames]).start()
+    worker_function(sensorIDs, sensorNames)
+
 
 if __name__ == '__main__':
     try:
         sensorIDs, sensorNames = initialize()
     except Exception as e:
         print(e)
-    main(sensorIDs, sensorNames)
+    regular(10, main, sensorIDs, sensorNames)
+
+    #main(sensorIDs, sensorNames)
 
     

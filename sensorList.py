@@ -5,8 +5,8 @@ class Sensors(object):
             "28-030297791fbc",
         ]
         self.sensorNames = [
-            "Ranza-1",
-            "Ranza-2",
+            "Raf-1",
+            "Raf-2",
         ]
     
     def getSensorIDs(self):
