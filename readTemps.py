@@ -87,7 +87,7 @@ if __name__ == '__main__':
         sensorIDs, sensorNames = initialize()
     except Exception as e:
         print(e)
-    regular(10, main, sensorIDs, sensorNames)
+    regular(60, main, sensorIDs, sensorNames)
 
     #main(sensorIDs, sensorNames)
 
