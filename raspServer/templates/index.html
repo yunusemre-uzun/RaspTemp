@@ -57,6 +57,16 @@
 			</div>
 		</div>
 	</div>
+	<div class="container-table100">
+		<select id="sensorNameBox">
+			{% for sensor in sensor_list %}
+				<option value={{sensor.sensor_id}}>{{sensor.sensor_name}}</option>
+			{% endfor %}
+			<input type="sensorNameInput" id="nodeKeyText" name="nodeID" size="50">
+			{% csrf_token %}
+			<input type="submit" id="changeName" value='Kaydet' onclick="changeName()" style="background-color: #c850c0;">
+		</select>
+	</div>
 	
 
 <!--===============================================================================================-->	

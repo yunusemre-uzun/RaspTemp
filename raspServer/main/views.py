@@ -12,3 +12,12 @@ def index(request):
     }
     return HttpResponse(template.render(context, request))
 
+def new_name(request, sensor_id, new_name):
+    try:
+        sensor = Sensor.objects.get(sensor_id=sensor_id)
+    except Exception as e:
+        print(e)
+    sensor.sensor_name = new_name
+    sensor.save()
+    return HttpResponse(status=201)
+
