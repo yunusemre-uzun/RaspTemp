@@ -1,5 +1,8 @@
 import sys
 import sqlite3
+import time
+from datetime import datetime
+from sensorList import Sensors
 
 class LocalDatabase(object):
     __instance = None
@@ -16,6 +19,10 @@ class LocalDatabase(object):
         except Exception as e:
             print(e)
         LocalDatabase.__instance = self
+        sensors = Sensors().getSensorIDsAndNames()
+        for id, name in sensors.items():
+            self.createSensorInDatabaseIfNotExist(id, name)
+        
     
     def getSensorIDs(self):
         cur = self.conn.cursor()
@@ -52,7 +59,16 @@ class LocalDatabase(object):
         cur = self.conn.cursor()
         cur.execute("SELECT sensor_name FROM main_sensor WHERE sensor_id=?",(id,))
         rows = cur.fetchall()
+        if len(rows) == 0:
+            return None
         return rows[0][0]
+
+    def createSensorInDatabaseIfNotExist(self, id, name):
+        cur = self.conn.cursor()
+        if self.getSensorNameWithID(id) == None:
+            cur.execute("INSERT INTO main_sensor(sensor_id, sensor_name, temperature_date, notification_treshold, temperature_data) VALUES (?, ?, ?, ?, ?)"
+            ,(id, name, datetime.now().strftime("%Y-%m-%d %H:%M:%S"), 24, 10))
+
     
     def destroyConnection(self):
         self.__instance = None

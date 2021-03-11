@@ -17,6 +17,12 @@ class Sensors(object):
     def getSensorNames(self):
         return self.sensorNames
     
+    def getSensorIDsAndNames(self):
+        sensorDict = {}
+        for i in range(len(self.sensorIDs)):
+            sensorDict[self.sensorIDs[i]] = self.sensorNames[i]
+        return sensorDict
+    
     @staticmethod
     def readSensorWithID(id):
         try:
