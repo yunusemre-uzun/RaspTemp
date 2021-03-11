@@ -3,10 +3,12 @@ class Sensors(object):
         self.sensorIDs = [
             "28-030297790ba5",
             "28-030297791fbc",
+            "28-01145df9e527",
         ]
         self.sensorNames = [
             "Raf-1",
             "Raf-2",
+            "Raf-3",
         ]
     
     def getSensorIDs(self):

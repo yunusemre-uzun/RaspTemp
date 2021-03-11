@@ -60,7 +60,7 @@ def printSensorReadings(sensor_readings):
 
 def initialize():
     try:
-        initialize_firebase(sys.path[0] + "/rasptemp-c417a-firebase-adminsdk-ydsnp-07e62a0cc3.json")
+        initialize_firebase(sys.path[0] + "/rasptemp-c417a-firebase-adminsdk-ydsnp-68e9d136f8.json")
     except Exception as e:
         raise DatabaseException(1,e)
 
